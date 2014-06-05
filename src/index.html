@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>jQValid Test Page</title>
+        <script src="lib/js/jquery/jquery-2.1.1.js" type="text/javascript"></script>
+        <script src="jQValid.js" type="text/javascript"></script>
+        <style type="text/css">
+            html { margin: 0; padding: 0; font-family: 'Open Sans' ,'Verdana', 'Tahoma', 'Helvetica', sans-serif;}
+            body { padding: 10px; margin: 0px; }
+            form div {margin-bottom: 15px;}
+            form div div { margin-bottom: 10px; clear: both; float: none; overflow: hidden;}
+            form div div div { float: left; clear: none; min-width: 100px;   }
+            
+        </style>
+    </head>
+    <body>
+        <h1>Lets Have A Form!</h1>
+        <form name="frmMyForm">
+            <div>
+                <h3>TextBoxes</h3>
+                <div><div><label for="txtMyText">Plain Text</label></div><div><input type="text" name="txtMyText" id="txtMyText" /></div></div>
+                <div><div><label for="txtMyEmail">E-Mail</label></div><div><input type="email" name="txtMyEmail" id="txtMyEmail"/></div></div>
+                <div><div><label for="txtMyTelephone">Telephone</label></div><div><input type="tel" name="txtMyEmail" id="txtMyTelephone"/></div></div>
+                <div><div><label for="txtMyPassword">Password</label></div><div><input type="password" name="txtMyPassword" id="txtMyPassword"/></div></div>
+                <div><div><label for="txtMyWebsite">Website</label></div><div><input type="url" name="txtMyWebsite" id="txtMyWebsite"/></div></div>
+                <div><div><label for="txtMyNumber">Number</label></div><div><input type="number" name="txtMyNumber" id="txtMyWebsite"/></div></div>
+            </div>
+        </form>
+    </body>
+</html>
