@@ -7,9 +7,9 @@
         <style type="text/css">
             html { margin: 0; padding: 0; font-family: 'Open Sans' ,'Verdana', 'Tahoma', 'Helvetica', sans-serif;}
             body { padding: 10px; margin: 0px; }
-            form div {margin-bottom: 15px;}
+            form div {margin-bottom: 15px; }
             form div div { margin-bottom: 10px; clear: both; float: none; overflow: hidden;}
-            form div div div { float: left; clear: none; min-width: 100px;   }
+            form div div div { float: left; clear: none; min-width: 100px; vertical-align: middle; padding-left: 3px; }
             
         </style>
     </head>
@@ -23,7 +23,92 @@
                 <div><div><label for="txtMyTelephone">Telephone</label></div><div><input type="tel" name="txtMyEmail" id="txtMyTelephone"/></div></div>
                 <div><div><label for="txtMyPassword">Password</label></div><div><input type="password" name="txtMyPassword" id="txtMyPassword"/></div></div>
                 <div><div><label for="txtMyWebsite">Website</label></div><div><input type="url" name="txtMyWebsite" id="txtMyWebsite"/></div></div>
-                <div><div><label for="txtMyNumber">Number</label></div><div><input type="number" name="txtMyNumber" id="txtMyWebsite"/></div></div>
+                <div><div><label for="txtMyNumber">Number</label></div><div><input type="number" name="txtMyNumber" id="txtMyNumber"/></div></div>
+            </div>
+            <div>
+                <h3>Radio Buttons</h3>
+                <div>
+                    <div>Select One</div>
+                    <div>
+                        <input type="radio" name="radioMyRadioGrp1" value="1" id="radioMyRadio1" /><label for="radioMyRadio1" >Option 1</label>
+                        <input type="radio" name="radioMyRadioGrp1" value="2" id="radioMyRadio2" /><label for="radioMyRadio2" >Option 2</label>
+                        <input type="radio" name="radioMyRadioGrp1" value="3" id="radioMyRadio3" /><label for="radioMyRadio3" >Option 3</label>
+                    </div>
+                </div>
+                <div>
+                    <div>Select Another</div>
+                    <div>
+                        <input type="radio" name="radioMyRadioGrp2" value="9" id="radioMyRadio4" /><label for="radioMyRadio4" >Option 9</label>
+                        <input type="radio" name="radioMyRadioGrp2" value="8" id="radioMyRadio5" /><label for="radioMyRadio5" >Option 8</label>
+                        <input type="radio" name="radioMyRadioGrp2" value="7" id="radioMyRadio6" /><label for="radioMyRadio6" >Option 7</label>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3>CheckBoxes</h3>
+                <div>
+                    <input type="checkbox" name="checkMySelections" value="pepperoni" id="checkPepperoni"/><label for="checkPepperoni" >Pepperoni</label>
+                    <input type="checkbox" name="checkMySelections" value="sassuge" id="checkSassuge" /><label for="checkSassuge" >Sassuge</label>
+                    <input type="checkbox" name="checkMySelections" value="jalapeno" id="checkJalapeno" /><label for="checkJalapeno" >Jalapeno</label>
+                </div>
+            </div>
+            <div>
+                <h3>Lists</h3>
+                <div>
+                    <div><label for="selectCombo">Select One</label></div>
+                    <div>
+                        <select name="selectCombo" id="selectCombo">
+                            <option value="" selected>Select One..</option>
+                            <option value="volvo">Volvo</option>
+                            <option value="mercedes">Mercedes Benz</option>
+                            <option value="audi">Audi</option>
+                            <option value="vw">Volkswagen</option>
+                            <option value="bmw">BMW</option>
+                            <option value="fiat">Fiat</option>
+                        </select>
+                    </div>
+                    <div><label for="selectSingle">Single List</label></div>
+                    <div>
+                        <select name="selectSingle" id="selectSingle" size="6">
+                            <option value="tokyo">Tokyo</option>
+                            <option value="jakarta">Jakarta</option>
+                            <option value="seoul">Seoul</option>
+                            <option value="delhi">Delhi</option>
+                            <option value="shangai">Shangai</option>
+                            <option value="manila">Manila</option>
+                            <option value="karachi">Karachi</option>
+                            <option value="nyc">New York City</option>
+                            <option value="saopaulo">Sao Paulo</option>
+                            <option value="mexicocity">Mexico City</option>
+                            <option value="moscow">Moscow</option>
+                        </select>
+                    </div>
+                    <div><label for="selectMulti">Multi List</label></div>
+                    <div>
+                        <select name="selectMulti" id="selectSingle" size="6" multiple>
+                            <option value="tokyo">Tokyo</option>
+                            <option value="jakarta">Jakarta</option>
+                            <option value="seoul">Seoul</option>
+                            <option value="delhi">Delhi</option>
+                            <option value="shangai">Shangai</option>
+                            <option value="manila">Manila</option>
+                            <option value="karachi">Karachi</option>
+                            <option value="nyc">New York City</option>
+                            <option value="saopaulo">Sao Paulo</option>
+                            <option value="mexicocity">Mexico City</option>
+                            <option value="moscow">Moscow</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3>TextArea</h3>
+                <div>
+                    <label for="txtTextArea">Write an address</label>
+                </div>
+                <div>
+                    <textarea name="txtTextArea" id="txtTextArea" cols="80" rows="8"></textarea>
+                </div>
             </div>
         </form>
     </body>
