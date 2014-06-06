@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <title>jQValid Test Page</title>
+        <meta charset="utf-8" />
         <script src="lib/js/jquery/jquery-2.1.1.js" type="text/javascript"></script>
         <script src="jQValid.js" type="text/javascript"></script>
         <style type="text/css">
@@ -12,10 +13,16 @@
             form div div div { float: left; clear: none; min-width: 100px; vertical-align: middle; padding-left: 3px; }
             
         </style>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("body").jQValid();
+                //$("form[name=frmMyForm]").jQValid();
+            });
+        </script>
     </head>
     <body>
         <h1>Lets Have A Form!</h1>
-        <form name="frmMyForm">
+        <form name="frmMyForm" >
             <div>
                 <h3>TextBoxes</h3>
                 <div><div><label for="txtMyText">Plain Text</label></div><div><input type="text" name="txtMyText" id="txtMyText" /></div></div>
