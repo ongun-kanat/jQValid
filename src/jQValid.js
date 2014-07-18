@@ -7,7 +7,7 @@
 (function( $ ) {
         
     $.fn.jQValid = function ( pluginOptions )
-    {       
+    {
         return this.each(function (){
             var affected_forms;
             if($(this).is("form"))
@@ -25,9 +25,9 @@
                 $(this).find("input, textarea, select").each(function(){
                     $(this).bind("keyup click change focus", function (evt){
                         var jQvSettings = $.fn.jQValid.defaults;
-                        if(pluginOptions != null) /* TODO: Fix Here */
+                        if(pluginOptions == "bootstrap3") /* TODO: Use .apply() , create init function */
                         {
-                            jQvSettings = $.fn.jQValid.bootstrap3;
+                            jQvSettings = $.extend({}, $.fn.jQValid.defaults ,$.fn.jQValid.bootstrap3);
                         }
                         $.fn.jQValid.methods.validateElement($(this), jQvSettings);
                     });
