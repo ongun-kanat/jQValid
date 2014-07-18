@@ -37,6 +37,31 @@
                  * TODO: Bind jQValid.ValidationChange and find valid/invalid elements
                  * then trigger jQValid.ValidationSuccess or jQValid.ValidationFail
                  */
+                
+                $(this).bind("jQValid.validationChange",function() {
+                    var validatableElements = $(this).find("input:not([data-jqvalid-skip]), select:not([data-jqvalid-skip]), textarea:not([data-jqvalid-skip])");
+                    
+                    validatableElements =  validatableElements.filter("input[type=email], input[type=url], input[type=tel], \
+                                                                input[type=number], input[required], input[type=text][data-jqvalid-regex], \
+                                                                input[max],input[maxlength], input[min], input[minlength], \
+                                                                input[type=checkbox][data-maxitems], input[type=checkbox][data-minitems], \
+                                                                select[required], select[data-minitems], select[data-maxitems], textarea[required], \
+                                                                texarea[maxlength], textarea[minlength]");
+                    var numofinputs = validatableElements.length;
+                    //Check here
+                    if( $(this).find("[data-jqvalid-validity=valid]").length == numofinputs )
+                    {
+                        $(this).trigger("jQValid.validationSuccess");
+                    }
+                    else
+                    {
+                        $(this).trigger("jQValid.validationFail");
+                    }
+                });
+                
+                $(this).bind("jQValid.validationSuccess",function() {
+                    console.log("success");
+                });
             });
         });
     };
@@ -44,7 +69,7 @@
     $.fn.jQValid.methods = {
         validateElement: function(element, settings) {
             var patterns = $.fn.jQValid.validationPatterns;
-            var result;
+            var result = true;
             // TODO: Do the validation work here
             if(element.is("input"))
             {
