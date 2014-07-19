@@ -22,52 +22,44 @@
             }
             
             affected_forms.each(function(){
-                $(this).find("input, textarea, select").each(function(){
+                var validatableElements = $(this).find("input:not([data-jqvalid-skip]), select:not([data-jqvalid-skip]), textarea:not([data-jqvalid-skip])");
+                    
+                validatableElements =  validatableElements.filter(
+                        "input[type=email], input[type=url], input[type=tel], \
+                        input[type=number], input[required], input[type=text][data-jqvalid-regex], \
+                        input[max],input[maxlength], input[min], input[minlength], \
+                        input[type=checkbox][data-maxitems], input[type=checkbox][data-minitems], \
+                        select[required], select[data-minitems], select[data-maxitems], textarea[required], \
+                        texarea[maxlength], textarea[minlength]");
+                validatableElements.each(function(){
                     $(this).bind("keyup click change focus", function (evt){
                         var jQvSettings = $.fn.jQValid.defaults;
                         if(pluginOptions == "bootstrap3") /* TODO: Use .apply() , create init function(?), they are belong to init process so determine method or option by if ( typeof pluginOptions === "object" ) */
                         {
                             jQvSettings = $.extend({}, $.fn.jQValid.defaults ,$.fn.jQValid.bootstrap3);
                         }
-                        var validationresult = $.fn.jQValid.methods.validateElement($(this), jQvSettings);
+                        var validationresult = $.fn.jQValid.methods.validateElement.apply(this, []);
                         if(validationresult)
                         {
                             $(this).attr("data-jqvalid-validity","valid");
-                            $(this).removeClass($.fn.jQValid.guiFrameworks[settings.guiFramework].invalidClass);
-                            $(this).addClass($.fn.jQValid.guiFrameworks[settings.guiFramework].validClass);
+                            $(this).removeClass($.fn.jQValid.guiFrameworks[jQvSettings.guiFramework].invalidClass);
+                            $(this).addClass($.fn.jQValid.guiFrameworks[jQvSettings.guiFramework].validClass);
                         }
                         else
                         {
                             $(this).attr("data-jqvalid-validity","invalid");
-                            $(this).removeClass($.fn.jQValid.guiFrameworks[settings.guiFramework].validClass);
-                            $(this).addClass($.fn.jQValid.guiFrameworks[settings.guiFramework].invalidClass);
+                            $(this).removeClass($.fn.jQValid.guiFrameworks[jQvSettings.guiFramework].validClass);
+                            $(this).addClass($.fn.jQValid.guiFrameworks[jQvSettings.guiFramework].invalidClass);
                         }
 
                         $(this).parents("form:not([novalidate])").first().trigger("jQValid.validationChange");
                     });
-                });
-                
-                /*
-                 * TODO: Bind jQValid.ValidationChange and find valid/invalid elements
-                 * then trigger jQValid.ValidationSuccess or jQValid.ValidationFail
-                 */
-                
-                $(this).bind("jQValid.validationChange",function() {
-                    
-                });
-                
-                $(this).bind("jQValid.validationSuccess",function() {
-                    console.log("success");
                 });
             });
         });
     };
     
     $.fn.jQValid.methods = {
-        init: function( options )
-        {
-            
-        },
         isValid: function() {
             var validatableElements = $(this).find("input:not([data-jqvalid-skip]), select:not([data-jqvalid-skip]), textarea:not([data-jqvalid-skip])");
                     
@@ -76,17 +68,32 @@
                                                         input[max],input[maxlength], input[min], input[minlength], \
                                                         input[type=checkbox][data-maxitems], input[type=checkbox][data-minitems], \
                                                         select[required], select[data-minitems], select[data-maxitems], textarea[required], \
-                                                        texarea[maxlength], textarea[minlength]");
-            var numofinputs = validatableElements.length;
+                                                        texarea[maxlength], textarea[minlength]"); // Make this array
             //Check validation with validateELement function here
+            var validationResult = true;
             validatableElements.each(function(){
                 //Check every element with validateElement
+                if(! $.fn.jQValid.methods.validateElement().apply(this, []))
+                {
+                    validationResult = false;
+                }
             });
-            //return $(this).find("[data-jqvalid-validity=valid]").length == numofinputs;
+            return validationResult;
                       
         },
-        validateElement: function(element, settings) {
+        validateNow: function(){
+            var result = $.fn.jQValid.methods.isValid.apply(this,[]);
+            /* TODO: here */
+            {
+                $(this).attr("data-jqvalid-validity","invalid");
+                $(this).removeClass($.fn.jQValid.guiFrameworks[jQvSettings.guiFramework].validClass);
+                $(this).addClass($.fn.jQValid.guiFrameworks[jQvSettings.guiFramework].invalidClass);
+            }
+        },
+        validateElement: function() {
+            var element = $(this);
             var patterns = $.fn.jQValid.validationPatterns;
+            var methods = $.fn.jQValid.methods;
             var result = true;
             // TODO: Do the validation work here
             if(element.is("input"))
@@ -94,7 +101,7 @@
                 switch(element.attr("type").toLowerCase())
                 {
                     case "email":
-                        result = this.validationByPattern(element, patterns.email, settings);
+                        result = methods.validationByPattern(element, patterns.email);
                 }
             }
             else if(element.is("textarea"))
@@ -106,24 +113,29 @@
                 
             }
             // TODO: Think about bootstrap.. Classes added to form groups, maybe a element of interest field can be added to guiFramework
-            
+            return result;
         },
-        validationByPattern: function(element, pattern, settings)
+        validationByPattern: function(element, pattern)
         {
             if( pattern.type == "regex" )
             {
-                return this.regexValidation(element, pattern.regex, settings);
+                return this.regexValidation(element, pattern.regex);
             }
             else if(pattern.type == "alias")
             {
-                return this.validationByPattern(element, pattern.dest, settings);
+                return this.validationByPattern(element, pattern.dest);
             }
         },
         // TODO: Generate different funtions
-        regexValidation: function(element, regex, settings)
+        regexValidation: function(element, regex)
         {
             var checker = new RegExp(regex);
             return checker.test(element.val());
+        },
+        
+        mincharsValidation: function(element, number)
+        {
+            
         }
     };
        
@@ -140,6 +152,10 @@
         number: {
             type: "regex",
             regex: "^[0-9]+$"
+        },
+        tel: {
+            type: "regex",
+            regex: "^[0-9() *#+-]+$"
         }
     };
     
