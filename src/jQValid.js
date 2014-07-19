@@ -25,11 +25,25 @@
                 $(this).find("input, textarea, select").each(function(){
                     $(this).bind("keyup click change focus", function (evt){
                         var jQvSettings = $.fn.jQValid.defaults;
-                        if(pluginOptions == "bootstrap3") /* TODO: Use .apply() , create init function */
+                        if(pluginOptions == "bootstrap3") /* TODO: Use .apply() , create init function(?), they are belong to init process so determine method or option by if ( typeof pluginOptions === "object" ) */
                         {
                             jQvSettings = $.extend({}, $.fn.jQValid.defaults ,$.fn.jQValid.bootstrap3);
                         }
-                        $.fn.jQValid.methods.validateElement($(this), jQvSettings);
+                        var validationresult = $.fn.jQValid.methods.validateElement($(this), jQvSettings);
+                        if(validationresult)
+                        {
+                            $(this).attr("data-jqvalid-validity","valid");
+                            $(this).removeClass($.fn.jQValid.guiFrameworks[settings.guiFramework].invalidClass);
+                            $(this).addClass($.fn.jQValid.guiFrameworks[settings.guiFramework].validClass);
+                        }
+                        else
+                        {
+                            $(this).attr("data-jqvalid-validity","invalid");
+                            $(this).removeClass($.fn.jQValid.guiFrameworks[settings.guiFramework].validClass);
+                            $(this).addClass($.fn.jQValid.guiFrameworks[settings.guiFramework].invalidClass);
+                        }
+
+                        $(this).parents("form:not([novalidate])").first().trigger("jQValid.validationChange");
                     });
                 });
                 
@@ -39,24 +53,7 @@
                  */
                 
                 $(this).bind("jQValid.validationChange",function() {
-                    var validatableElements = $(this).find("input:not([data-jqvalid-skip]), select:not([data-jqvalid-skip]), textarea:not([data-jqvalid-skip])");
                     
-                    validatableElements =  validatableElements.filter("input[type=email], input[type=url], input[type=tel], \
-                                                                input[type=number], input[required], input[type=text][data-jqvalid-regex], \
-                                                                input[max],input[maxlength], input[min], input[minlength], \
-                                                                input[type=checkbox][data-maxitems], input[type=checkbox][data-minitems], \
-                                                                select[required], select[data-minitems], select[data-maxitems], textarea[required], \
-                                                                texarea[maxlength], textarea[minlength]");
-                    var numofinputs = validatableElements.length;
-                    //Check here
-                    if( $(this).find("[data-jqvalid-validity=valid]").length == numofinputs )
-                    {
-                        $(this).trigger("jQValid.validationSuccess");
-                    }
-                    else
-                    {
-                        $(this).trigger("jQValid.validationFail");
-                    }
                 });
                 
                 $(this).bind("jQValid.validationSuccess",function() {
@@ -67,6 +64,27 @@
     };
     
     $.fn.jQValid.methods = {
+        init: function( options )
+        {
+            
+        },
+        isValid: function() {
+            var validatableElements = $(this).find("input:not([data-jqvalid-skip]), select:not([data-jqvalid-skip]), textarea:not([data-jqvalid-skip])");
+                    
+            validatableElements =  validatableElements.filter("input[type=email], input[type=url], input[type=tel], \
+                                                        input[type=number], input[required], input[type=text][data-jqvalid-regex], \
+                                                        input[max],input[maxlength], input[min], input[minlength], \
+                                                        input[type=checkbox][data-maxitems], input[type=checkbox][data-minitems], \
+                                                        select[required], select[data-minitems], select[data-maxitems], textarea[required], \
+                                                        texarea[maxlength], textarea[minlength]");
+            var numofinputs = validatableElements.length;
+            //Check validation with validateELement function here
+            validatableElements.each(function(){
+                //Check every element with validateElement
+            });
+            //return $(this).find("[data-jqvalid-validity=valid]").length == numofinputs;
+                      
+        },
         validateElement: function(element, settings) {
             var patterns = $.fn.jQValid.validationPatterns;
             var result = true;
@@ -76,7 +94,7 @@
                 switch(element.attr("type").toLowerCase())
                 {
                     case "email":
-                        result = this.Validation(element, patterns.email, settings);
+                        result = this.validationByPattern(element, patterns.email, settings);
                 }
             }
             else if(element.is("textarea"))
@@ -88,22 +106,9 @@
                 
             }
             // TODO: Think about bootstrap.. Classes added to form groups, maybe a element of interest field can be added to guiFramework
-            if(result)
-            {
-                element.attr("data-jqvalid-validity","valid");
-                element.removeClass(settings.guiFramework.invalidClass);
-                element.addClass(settings.guiFramework.validClass);
-            }
-            else
-            {
-                element.attr("data-jqvalid-validity","invalid");
-                element.removeClass(settings.guiFramework.validClass);
-                element.addClass(settings.guiFramework.invalidClass);
-            }
             
-            element.parents("form:not([novalidate])").first().trigger("jQValid.validationChange");
         },
-        Validation: function(element, pattern, settings)
+        validationByPattern: function(element, pattern, settings)
         {
             if( pattern.type == "regex" )
             {
@@ -111,7 +116,7 @@
             }
             else if(pattern.type == "alias")
             {
-                return this.Validation(element, pattern.dest, settings);
+                return this.validationByPattern(element, pattern.dest, settings);
             }
         },
         // TODO: Generate different funtions
@@ -121,7 +126,7 @@
             return checker.test(element.val());
         }
     };
-    
+       
     // TODO: Make decision of patterns
     $.fn.jQValid.validationPatterns = {
         email : {
@@ -131,6 +136,10 @@
         url: {
             type: "regex",
             regex: "^((ftp|http|https):\/\/)?([a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+.*)\.[A-Za-z]{2,6}$"
+        },
+        number: {
+            type: "regex",
+            regex: "^[0-9]+$"
         }
     };
     
@@ -148,12 +157,12 @@
     
     $.fn.jQValid.defaults = {
       htmlScan: true,
-      guiFramework: $.fn.jQValid.guiFrameworks.default
+      guiFramework: "default"
     };
     
     $.fn.jQValid.bootstrap3 = {
       htmlScan: true,
-      guiFramework: $.fn.jQValid.guiFrameworks.bootstrap3
+      guiFramework: "bootstrap3"
     };
 
     
