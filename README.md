@@ -1,4 +1,4 @@
 jQValid
 =======
 
-jQValid a jQuery Validator
+jQValid a jQuery Validator under development
